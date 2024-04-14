@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, get_object_or_404
 import random
 import datetime
+from clothes.models import Clothes
 
 def hello_view(request):
     if request.method == 'GET':
@@ -25,4 +26,20 @@ def main_view(request):
     }
     return render(request, 'main.html', context)
 
+def clothes_list_view(request):
+    if request.method == 'GET':
+        clothes = Clothes.objects.all
+        context = {'clothes': clothes}
+        return render(request, 'clothes/clothes_list.html', context)
+
+def clothes_detail_view(request, cloth_id=None):
+    if request.method == 'GET':
+        try:
+            cloth = Clothes.objects.get(id=cloth_id)
+        except Clothes.DoesNotExist:
+            return HttpResponse('Cloth not found', status=404)
+
+        context = {'cloth': cloth}
+
+        return render(request, 'clothes/clothes_details.html', context)
 

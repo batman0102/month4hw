@@ -1,0 +1,24 @@
+<h1>
+    List of Clothes
+</h1>
+
+{% for cloth in clothes %}
+<div>
+    <h2>{{ cloth.name }} - {{ cloth.price }}сом</h2>
+    <p>
+        {{ cloth.description }}
+    </p>
+    <p>
+        Color: {{ cloth.color }}
+    </p>
+    <p>
+        Added on: {{ cloth.created_at|date:"Y-m-d" }}
+    </p>
+
+    <a href="{{cloth.id}}">Read more</a>
+</div>
+{% endfor %}
+
+
+
+
