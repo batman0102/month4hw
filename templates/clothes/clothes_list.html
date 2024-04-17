@@ -3,16 +3,15 @@
 </h1>
 
 {% for cloth in clothes %}
+
 <div>
-    <h2>{{ cloth.name }} - {{ cloth.price }}сом</h2>
+    <img src="/{{cloth.image}}" width="300">
+    <h2>{{ cloth.name }}</h2>
     <p>
         {{ cloth.description }}
     </p>
     <p>
-        Color: {{ cloth.color }}
-    </p>
-    <p>
-        Added on: {{ cloth.created_at|date:"Y-m-d" }}
+        {{ cloth.price }} сом
     </p>
 
     <a href="{{cloth.id}}">Read more</a>

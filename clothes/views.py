@@ -28,11 +28,11 @@ def main_view(request):
 
 def clothes_list_view(request):
     if request.method == 'GET':
-        clothes = Clothes.objects.all
+        clothes = Clothes.objects.all()
         context = {'clothes': clothes}
         return render(request, 'clothes/clothes_list.html', context)
 
-def clothes_detail_view(request, cloth_id=None):
+def clothes_detail_view(request, cloth_id):
     if request.method == 'GET':
         try:
             cloth = Clothes.objects.get(id=cloth_id)
