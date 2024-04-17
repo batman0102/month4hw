@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_view),
     path('fun/', fun_view),
-    path('main/', main_view),
+    path('', main_view),
     path('clothes/', clothes_list_view),
     path('clothes/<int:cloth_id>/', clothes_detail_view)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
