@@ -1,23 +1,28 @@
+{% extends 'components/navbar.html' %}
+
+{% block content %}
 <h1>
     List of Clothes
 </h1>
 
 {% for cloth in clothes %}
 
-<div>
-    <img src="/{{cloth.image}}" width="300">
-    <h2>{{ cloth.name }}</h2>
-    <p>
-        {{ cloth.description }}
-    </p>
-    <p>
-        {{ cloth.price }} сом
-    </p>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+    <div class="card" style="width: 18rem;">
+  <img src="/media/{{ cloth.image }}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">{{ cloth.name }} - {{ cloth.price }} сом</h5>
+  </div>
+  <ul class="list-group list-group-flush">
+      {% for tag in cloth.tags.all %}
+            <li class="list-group-item">{{ tag.title }}</li>
+      {% endfor %}
+  </ul>
+  <div class="card-body">
+    <a href="{% url 'clothes_detail' cloth.id %}" class="card-link">Show more...</a>
+  </div>
 
-    <a href="{{cloth.id}}">Read more</a>
 </div>
 {% endfor %}
 
-
-
-
+{% endblock %}

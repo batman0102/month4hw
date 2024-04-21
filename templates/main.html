@@ -1,12 +1,16 @@
+{% extends 'components/navbar.html' %}
+
 {% load static %}
 
-    <img src="{% static '6254112736.jpg' %}" alt="main image" width="500">
+{% block content %}
+
+    <img src="{% static 'photo_2023-07-04_14-27-01.jpg' %}" alt="main image" width="500">
 
 <title>Главная страница</title>
 <body>
     <h1>Приветствуем вас!</h1>
     <p>Сегодняшняя дата: {{ date }}</p>
     <p>Текущее время: {{ time }}</p>
-</body>
 
+{% endblock %}
 

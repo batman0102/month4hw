@@ -1,7 +1,9 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 import random
 import datetime
 from clothes.models import Clothes
+from clothes.forms import ReviewForm, ClothForm
+
 
 def hello_view(request):
     if request.method == 'GET':
@@ -32,14 +34,39 @@ def clothes_list_view(request):
         context = {'clothes': clothes}
         return render(request, 'clothes/clothes_list.html', context)
 
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Clothes, Review
+from .forms import ReviewForm
+
 def clothes_detail_view(request, cloth_id):
+    cloth = get_object_or_404(Clothes, id=cloth_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.clothes = cloth
+            review.save()
+            return redirect('clothes_detail', cloth_id=cloth.id)
+    else:
+        form = ReviewForm()
+    reviews = cloth.reviews.all()
+    context = {
+        'cloth': cloth,
+        'form': form,
+        'reviews': reviews
+    }
+    return render(request, 'clothes/clothes_details.html', context)
+
+
+
+def cloth_create_view(request):
     if request.method == 'GET':
-        try:
-            cloth = Clothes.objects.get(id=cloth_id)
-        except Clothes.DoesNotExist:
-            return HttpResponse('Cloth not found', status=404)
+        form = ClothForm()
+        return render(request, 'clothes/cloth_create.html', {'form': form})
+    elif request.method == 'POST':
+        form = ClothForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('clothes_list_view')
 
-        context = {'cloth': cloth}
-
-        return render(request, 'clothes/clothes_details.html', context)
-
+        return render(request, 'clothes/cloth_create.html', {'form': form})

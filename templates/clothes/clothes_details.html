@@ -1,10 +1,13 @@
+{% extends 'components/navbar.html' %}
+
+{% block content %}
+
+
 <h1>
     {{ cloth.name }}
 </h1>
 <div>
-    <h2>
-        {{ cloth.name }}
-    </h2>
+    <img src="/media/{{ cloth.image }}", width=300>
     <p>
         {{ cloth.description }}
     </p>
@@ -19,22 +22,32 @@
     </p>
 
     <h3>
-        Reviews:
+        Tags:
     </h3>
-        {% for review in cloth.reviews.all %}
-            <p>
-                {{ review.text }}
-            </p>
-        {% endfor %}
-
-
-    <h3>Tags:</h3>
         {% for tag in cloth.tags.all %}
             <p>
                 {{ tag.title }}
             </p>
         {% endfor %}
 
-    <a href="/clothes/">Back to main page</a>
+
+    <h3>
+        Reviews:
+    </h3>
+        {% for review in cloth.reviews.all %}
+            <p>
+                {{ review.text }} - {{ review.created_at }}
+            </p>
+        {% endfor %}
 </div>
 
+
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Add Review" class="btn btn-primary">
+</form>
+
+<a href="/clothes/">Back to main page</a>
+
+{% endblock %}

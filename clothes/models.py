@@ -14,12 +14,12 @@ class Category(models.Model):
         return self.name
 
 class Clothes(models.Model):
-    image = models.ImageField(upload_to='clothes_photos/', null=True, blank=True)
-    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='', null=True, blank=True)
+    name = models.CharField(max_length=55)
     description = models.TextField(null=True, blank=True)
     price = models.IntegerField()
     color = models.CharField(max_length=50)
-    size = models.CharField(max_length=50, null=True, blank=True)
+    size = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     in_stock = models.BooleanField(default=True)
     tags = models.ManyToManyField(
@@ -31,7 +31,8 @@ class Clothes(models.Model):
         Category,
         on_delete=models.CASCADE,
         related_name='clothes',
-        default='other'
+        null=True,
+        blank=True
     )
 
     def __str__(self):
@@ -49,7 +50,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.text
+        return f'Review for {self.clothes.name} at {self.created_at.strftime("%Y-%m-%d %H:%M")}'
 
 
 
