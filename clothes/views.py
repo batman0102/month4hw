@@ -1,24 +1,20 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
-import random
 import datetime
+
+from django.urls import reverse
+from django.views.generic.edit import FormMixin
+
 from clothes.models import Clothes
 from clothes.forms import ReviewForm, ClothForm
+from typing import Any
+from django.forms.models import BaseModelForm
+from django.views import View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
+class HelloView(View):
+    def get(self, request):
+        return HttpResponse('Hello, World!')
 
-def hello_view(request):
-    if request.method == 'GET':
-         return HttpResponse("Hello! It's my project")
-
-
-def fun_view(request):
-    if request.method == 'GET':
-        jokes = [
-            "Какой сыр любит сам себя? Фета!",
-            "Что сказал 0 цифре 8? Привет, ремень!",
-            "Почему программеры предпочитают темноту? Потому что в темноте нет багов!"
-        ]
-        joke = random.choice(jokes)
-        return HttpResponse(joke)
 
 def main_view(request):
     current_time = datetime.datetime.now()
@@ -28,45 +24,84 @@ def main_view(request):
     }
     return render(request, 'main.html', context)
 
-def clothes_list_view(request):
-    if request.method == 'GET':
+
+class ClothListView(ListView):
+    model = Clothes
+    template_name = 'clothes/clothes_list.html'
+    context_object_name = 'clothes'
+
+    def get_context_data(self, **kwargs: Any) -> dict:
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
         clothes = Clothes.objects.all()
-        context = {'clothes': clothes}
-        return render(request, 'clothes/clothes_list.html', context)
+        return clothes
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Clothes, Review
-from .forms import ReviewForm
+class ClothDetailView(FormMixin, DetailView):
+    model = Clothes
+    template_name = 'clothes/clothes_details.html'
+    context_object_name = 'cloth'
+    pk_url_kwarg = 'cloth_id'
+    form_class = ReviewForm
 
-def clothes_detail_view(request, cloth_id):
-    cloth = get_object_or_404(Clothes, id=cloth_id)
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
+    def get_success_url(self):
+        return reverse('clothes_detail', kwargs={'cloth_id': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        context['reviews'] = self.object.reviews.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
         if form.is_valid():
-            review = form.save(commit=False)
-            review.clothes = cloth
-            review.save()
-            return redirect('clothes_detail', cloth_id=cloth.id)
-    else:
-        form = ReviewForm()
-    reviews = cloth.reviews.all()
-    context = {
-        'cloth': cloth,
-        'form': form,
-        'reviews': reviews
-    }
-    return render(request, 'clothes/clothes_details.html', context)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        review = form.save(commit=False)
+        review.clothes = self.object
+        review.save()
+        return super().form_valid(form)
+
+class CLothCreateView(CreateView):
+    model = Clothes
+    form_class = ClothForm
+    template_name = 'clothes/clothes_create.html'
+    success_url = '/clothes/'
+
+class ClothUpdateView(UpdateView):
+    model = Clothes
+    form_class = ClothForm
+    template_name = 'clothes/clothes_edit.html'
+    context_object_name = 'clothes'
+    pk_url_kwarg = 'cloth_id'
+    success_url = '/clothes/'
 
 
+def cloth_update_view(request, cloth_id):
+    try:
+        post = Clothes.objects.get(id=cloth_id)
+    except Clothes.DoesNotExist:
+        return HttpResponse('Clooth not found', status=404)
 
-def cloth_create_view(request):
     if request.method == 'GET':
-        form = ClothForm()
-        return render(request, 'clothes/cloth_create.html', {'form': form})
+        form = ClothForm(instance=post)
+
+        context = {'form': form}
+
+        return render(request, 'clothes/clothes_edit.html', context)
+
     elif request.method == 'POST':
-        form = ClothForm(request.POST, request.FILES)
+        form = ClothForm(request.POST, request.FILES, instance=post)
+
         if form.is_valid():
             form.save()
-            return redirect('clothes_list_view')
 
-        return render(request, 'clothes/cloth_create.html', {'form': form})
+            return redirect(f'/posts/{cloth_id}/')
+
+        return render(request, 'clothes/clothes_edit.html', {'form': form})

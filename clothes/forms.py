@@ -55,3 +55,4 @@ class ReviewForm(forms.ModelForm):
                 }
             )
         }
+
