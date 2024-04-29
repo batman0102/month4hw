@@ -736,3 +736,7 @@ Request to / took 0.00 seconds, Method: GET, Status Code: 200
 Request to /profile/ took 0.00 seconds, Method: GET, Status Code: 200
 Request to /media/ took 0.01 seconds, Method: GET, Status Code: 404
 Not Found: /media/
+Request to / took 0.01 seconds, Method: GET, Status Code: 200
+Request to /profile/ took 0.02 seconds, Method: GET, Status Code: 200
+Request to /media/ took 0.01 seconds, Method: GET, Status Code: 404
+Not Found: /media/
