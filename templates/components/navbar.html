@@ -25,6 +25,22 @@
           <li class="nav-item">
             <a class="nav-link" href="/cloth/create/">Create Cloth</a>
           </li>
+         {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="/logout/">Logout</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile/">Profile</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/register/">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login/">Login</a>
+            </li>
+          {% endif %}
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown link

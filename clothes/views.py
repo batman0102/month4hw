@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
+from django.shortcuts import render, HttpResponse, redirect
 import datetime
 
 from django.urls import reverse
@@ -7,7 +7,6 @@ from django.views.generic.edit import FormMixin
 from clothes.models import Clothes
 from clothes.forms import ReviewForm, ClothForm
 from typing import Any
-from django.forms.models import BaseModelForm
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 

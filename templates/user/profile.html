@@ -1,0 +1,49 @@
+{% extends 'components/navbar.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<h1 class="mt-5" style="text-align: center;">
+    Profile
+</h1>
+
+<div class="container">
+    <img src="/media/{{ user.profile.logo }}" alt="Profile Picture" style="width: 200px; height: 200px; border-radius: 50%;">
+    <h2>{{ user.username }}</h2>
+    <h3>{{ user.first_name }}</h3>
+    <h3>{{ user.last_name }}</h3>
+    <h3>{{ user.email }}</h3>
+    <h3>{{ user.age }}</h3>
+    <h3>{{ user.bio }}</h3>
+    <h3>{{ user.date_joined }}</h3>
+    <h3>{{ user.last_login }}</h3>
+    <a href="/profile/edit/">Edit Profile</a>
+    <a href="/profile/delete/">Delete Profile</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+    {% for post in user.posts.all %}
+    <div class="card" style="width: 18rem;">
+        {% if post.image %}
+            <img src="/media/{{ post.image }}" class="card-img-top" alt="...">
+        {% else %}
+            <img src="{% static 'default.jpg' %}" class="card-img-top" alt="...">
+        {% endif %}
+        <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for tag in post.tags.all %}
+                <li class="list-group-item">{{ tag.title }}</li>
+            {% endfor %}
+        </ul>
+        <div class="card-body">
+        <a href="/posts/{{ post.id }}" class="card-link">Show more..</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

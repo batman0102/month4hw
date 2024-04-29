@@ -8,10 +8,15 @@ class Tag(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=55)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+class ClothManager(models.Manager):
+    def create_cloth(self, title, text, image):
+        cloth = self.create(title=title.upper(), text=text, image=image)
+        return cloth
 
 class Clothes(models.Model):
     image = models.ImageField(upload_to='', null=True, blank=True)
@@ -34,6 +39,8 @@ class Clothes(models.Model):
         null=True,
         blank=True
     )
+
+    objects = ClothManager()
 
     def __str__(self):
         return self.name
