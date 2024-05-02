@@ -2,27 +2,38 @@
 
 {% block content %}
 <h1>
-    List of Clothes
+    Список одежды
 </h1>
 
-{% for cloth in clothes %}
+<form action="/clothes/" method="get">
+    {{ search_form.as_p }}
+    <button type="submit" class="btn btn-primary">Поиск</button>
+</form>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-    <div class="card" style="width: 18rem;">
-  <img src="/media/{{ cloth.image }}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{ cloth.name }} - {{ cloth.price }} сом</h5>
-  </div>
-  <ul class="list-group list-group-flush">
-      {% for tag in cloth.tags.all %}
-            <li class="list-group-item">{{ tag.title }}</li>
-      {% endfor %}
-  </ul>
-  <div class="card-body">
-    <a href="{% url 'clothes_detail' cloth.id %}" class="card-link">Show more...</a>
-  </div>
-
+    {% for cloth in clothes %}
+        <div class="card" style="width: 18rem;">
+            <img src="/media/{{ cloth.image }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{ cloth.name }} - {{ cloth.price }} сом</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for tag in cloth.tags.all %}
+                    <li class="list-group-item">{{ tag.title }}</li>
+                {% endfor %}
+            </ul>
+            <div class="card-body">
+                <a href="{% url 'clothes_detail' cloth.id %}" class="card-link">Подробнее...</a>
+            </div>
+        </div>
+    {% endfor %}
 </div>
-{% endfor %}
-
+<!-- Пагинация -->
+<div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+    {% for i in max_pages %}
+        <a href="/clothes/?page={{ i }}" class="btn btn-primary">
+            {{ i }}
+        </a>
+    {% endfor %}
+</div>
 {% endblock %}

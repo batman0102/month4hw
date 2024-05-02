@@ -1,5 +1,5 @@
 from django import forms
-from clothes.models import Clothes, Review
+from clothes.models import Clothes, Review, Tag
 class ClothForm(forms.ModelForm):
     class Meta:
         model = Clothes
@@ -56,3 +56,37 @@ class ReviewForm(forms.ModelForm):
             )
         }
 
+class SearchForm(forms.Form):
+    search = forms.CharField(
+        required=False,
+        max_length=100,
+        min_length=3,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Поиск',
+                'class': 'form-control'
+            }
+        )
+    )
+    tags = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
+
+    orderings = (
+        ('name', 'По заголовку'),
+        ('-name', 'По заголовку (обратно)'),
+        ('created_at', 'По дате создания'),
+        ('-created_at', 'По дате создания (обратно)')
+    )
+
+    ordering = forms.ChoiceField(
+        required=False,
+        choices=orderings,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
